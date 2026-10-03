@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f766e">
+<title>نظام متابعة غياب الموظفات - الابتدائية الحادية عشر ومتوسطة حفصة بنت عمر</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+:root{--brand:#0f766e;--brand2:#159b8e;--brand-dark:#0b5f59;--soft:#e8f7f5;--soft2:#f3fbfa;--ink:#1f2937;--muted:#64748b;--line:#dbe7e8;--bg:#f3f7f8;--danger:#e7524a;--warning:#d89b22;--shadow:0 14px 34px rgba(15,118,110,.10)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:radial-gradient(circle at 100% 0,#e8f7f5 0,transparent 30%),var(--bg);color:var(--ink);min-height:100vh}button,input,select,textarea{font:inherit}
+.header{position:relative;overflow:hidden;background:linear-gradient(135deg,#0b7a70 0%,#0f766e 50%,#0b6a73 100%);color:#fff;padding:22px 18px 30px;border-radius:0 0 34px 34px;box-shadow:0 12px 32px rgba(15,118,110,.17)}.header:before,.header:after{content:"";position:absolute;border-radius:999px;background:rgba(255,255,255,.08)}.header:before{width:210px;height:210px;left:-80px;top:-120px}.header:after{width:170px;height:170px;right:-55px;bottom:-100px}.brand-wrap{max-width:1100px;margin:auto;display:flex;align-items:center;gap:16px;position:relative;z-index:1}.moe-logo{width:126px;height:86px;object-fit:contain;background:#fff;border-radius:18px;padding:9px;box-shadow:0 7px 20px rgba(0,0,0,.08)}.brand-text{flex:1}.eyebrow{display:inline-flex;gap:7px;align-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);padding:5px 10px;border-radius:99px;font-size:12px;margin-bottom:8px}.header h1{margin:0;font-size:25px;line-height:1.45}.header p{margin:5px 0 0;opacity:.94;font-size:14px}
+.container{max-width:1100px;margin:auto;padding:16px}.card{background:rgba(255,255,255,.97);padding:17px;margin-bottom:14px;border-radius:20px;border:1px solid rgba(219,231,232,.9);box-shadow:var(--shadow);animation:fadeUp .4s ease both}.hidden{display:none!important}.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.login-card{max-width:520px;margin:12px auto;padding:24px}.login-card h2{margin:0 0 6px}.login-card p{margin:0 0 16px;color:var(--muted)}.login-mark{width:54px;height:54px;border-radius:16px;background:var(--soft);display:grid;place-items:center;color:var(--brand);font-size:24px;margin-bottom:12px}
+label{display:block;font-size:13px;font-weight:750;color:#536576;margin:10px 3px 2px}input,select,textarea{width:100%;padding:13px 14px;margin:6px 0;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink);outline:none;transition:.2s}input:focus,select:focus,textarea:focus{border-color:#7bc1bb;box-shadow:0 0 0 4px rgba(15,118,110,.08)}textarea{min-height:86px;resize:vertical}.primary,.secondary,.danger,.warning{border:0;border-radius:13px;padding:12px 16px;cursor:pointer;transition:.18s}.primary{background:linear-gradient(135deg,#16877c,#0f766e);color:#fff;font-weight:750;box-shadow:0 8px 18px rgba(15,118,110,.18)}.secondary{background:#edf2f6;color:#263749}.danger{background:var(--danger);color:#fff}.warning{background:#fff5d9;color:#805d11}.small{padding:9px 12px;font-size:14px}.full{width:100%;margin-top:8px}.message{text-align:center;font-weight:700;margin:10px 0}.muted{color:var(--muted)}
+.user-card{padding:13px 15px}.user-info{display:flex;align-items:center;gap:10px}.avatar{width:44px;height:44px;border-radius:14px;background:var(--soft);color:var(--brand);display:grid;place-items:center;font-size:19px}.user-name{font-weight:800;font-size:18px}.user-role{color:var(--muted);font-size:13px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px}.tab{background:#fff;color:#405266;border:1px solid var(--line);min-height:77px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-weight:750;box-shadow:0 5px 18px rgba(15,23,42,.035);border-radius:16px;cursor:pointer;transition:.2s}.tab i{font-size:22px;color:#4f7774}.tab.active{background:linear-gradient(135deg,#16877c,#0f766e);color:#fff;border-color:transparent;box-shadow:0 10px 22px rgba(15,118,110,.2);transform:translateY(-2px)}.tab.active i{color:#fff;transform:scale(1.08)}
+.page-heading{display:flex;align-items:center;gap:11px;margin:4px 2px 13px}.heading-icon{width:46px;height:46px;border-radius:15px;background:var(--soft);color:var(--brand);display:grid;place-items:center;font-size:20px}.page-heading h2{margin:0;font-size:22px}.page-heading p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar>*{flex:1;min-width:145px}.search-card{display:flex;gap:8px;align-items:center;padding:10px 13px}.search-card input{border:0;margin:0;box-shadow:none;background:transparent;padding:8px 4px}.search-card i{color:#7a8d9c}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}.stat{position:relative;overflow:hidden;background:#fff;border-radius:19px;padding:15px;border:1px solid #e0e9eb;box-shadow:0 7px 22px rgba(15,23,42,.05);transition:.2s}.stat:hover{transform:translateY(-3px)}.stat-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.metric-icon{width:38px;height:38px;border-radius:12px;background:var(--soft);color:var(--brand);display:grid;place-items:center;font-size:17px}.stat span{font-size:13px;color:#526679;font-weight:750}.stat strong{display:block;font-size:30px;color:var(--brand);margin-top:8px}.metric-line{position:absolute;height:3px;right:0;bottom:0;width:0;background:linear-gradient(90deg,#53c2b4,#0f766e);animation:growLine .9s .1s ease forwards}.nonabsent{background:linear-gradient(135deg,#fff,#f5fbfa);border:1px solid #d8ece9}.nonabsent strong{color:#0b7a70}
+.dashboard-filter{display:flex;gap:8px;flex-wrap:wrap;align-items:end}.dashboard-filter>div{flex:1;min-width:140px}.charts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.chart-card{min-height:320px}.chart-card h3{margin:0 0 2px}.chart-card p{margin:0 0 12px;color:var(--muted);font-size:13px}.chart-wrap{position:relative;height:250px}.list-mini{display:flex;gap:8px;flex-wrap:wrap}.pill{background:var(--soft);color:var(--brand-dark);padding:7px 10px;border-radius:99px;font-size:13px;font-weight:700}
+.item{border-right:4px solid #4ca89f}.item h3{margin:0 0 7px}.meta{color:var(--muted);font-size:14px;line-height:1.85}.badge{display:inline-block;padding:5px 9px;border-radius:99px;background:var(--soft);color:var(--brand);font-size:12px;font-weight:700;margin:2px}.badge.warn{background:#fff4da;color:#8a6518}.badge.danger{background:#ffebe9;color:#b53c36}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.empty{text-align:center;color:var(--muted);padding:18px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}table{width:100%;border-collapse:collapse;min-width:680px;background:#fff}th,td{padding:11px 10px;text-align:right;border-bottom:1px solid #edf1f2;font-size:14px}th{background:#f6faf9;color:#4a6171;position:sticky;top:0}.zero-row{background:#f1fbf8}.footer{text-align:center;color:#6d7d8c;font-size:12px;padding:20px 10px 28px}.footer strong{color:var(--brand)}
+.print-only{display:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}@keyframes growLine{to{width:100%}}@keyframes pulseNum{0%{transform:scale(.9);opacity:.4}100%{transform:scale(1);opacity:1}}
+@media(max-width:820px){.tabs{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.brand-wrap{gap:11px}.moe-logo{width:96px;height:68px}.header h1{font-size:22px}}
+@media(max-width:540px){.container{padding:12px}.tabs{grid-template-columns:repeat(3,1fr);gap:7px}.tab{min-height:71px;font-size:13px}.grid2,.grid3{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.stat strong{font-size:27px}.header{padding:18px 13px 24px}.moe-logo{width:86px;height:64px}.header h1{font-size:19px}.header p{font-size:12px}}
+@media print{body{background:#fff}.header,.tabs,.user-card,.no-print,.actions,button{display:none!important}.container{max-width:none}.card{box-shadow:none;border:1px solid #ddd}.print-only{display:block}.charts{grid-template-columns:1fr 1fr}.chart-card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="brand-wrap">
+    <img class="moe-logo" src="https://www.moe.gov.sa/ar/mediacenter/MOEnews/NewsImages/moe--logo--1437.jpg" alt="شعار وزارة التعليم">
+    <div class="brand-text">
+      <div class="eyebrow"><i class="bi bi-graph-up-arrow"></i> نظام إداري رقمي</div>
+      <h1>نظام متابعة غياب الموظفات</h1>
+      <p>الابتدائية الحادية عشر ومتوسطة حفصة بنت عمر</p>
+    </div>
+  </div>
+</header>
+<div class="container">
+  <section id="loginView" class="card login-card">
+    <div class="login-mark"><i class="bi bi-shield-lock"></i></div>
+    <h2>تسجيل الدخول</h2>
+    <p>بيانات الغياب خاصة، ولا يمكن الدخول للنظام إلا بحساب مصرح.</p>
+    <input id="email" type="email" placeholder="البريد الإلكتروني">
+    <input id="password" type="password" placeholder="كلمة المرور">
+    <button class="primary full" onclick="login()">دخول</button>
+    <div id="loginMsg" class="message"></div>
+  </section>
+
+  <main id="app" class="hidden">
+    <section class="card user-card row">
+      <div class="user-info"><div class="avatar"><i class="bi bi-person"></i></div><div><div class="user-name">فاطمة الشمري</div><div class="user-role">إدارة ومتابعة غياب الموظفات</div></div></div>
+      <button class="danger small" onclick="logout()"><i class="bi bi-box-arrow-left"></i> خروج</button>
+    </section>
+
+    <nav class="tabs no-print" id="tabs">
+      <button class="tab active" data-page="dashboard"><i class="bi bi-grid"></i>الداش بورد</button>
+      <button class="tab" data-page="employees"><i class="bi bi-people"></i>الموظفات</button>
+      <button class="tab" data-page="daily"><i class="bi bi-calendar-check"></i>الغياب اليومي</button>
+      <button class="tab" data-page="monthly"><i class="bi bi-bar-chart"></i>الإحصائية الشهرية</button>
+      <button class="tab" data-page="correspondence"><i class="bi bi-arrow-left-right"></i>صادر ووارد الغياب</button>
+      <button class="tab" data-page="inquiries"><i class="bi bi-file-earmark-text"></i>مساءلات الغياب</button>
+      <button class="tab" data-page="reports"><i class="bi bi-graph-up"></i>التقارير</button>
+      <button class="tab" data-page="archive"><i class="bi bi-archive"></i>الأرشيف</button>
+    </nav>
+
+    <section id="page-dashboard" class="page">
+      <div class="page-heading"><div class="heading-icon"><i class="bi bi-speedometer2"></i></div><div><h2>لوحة متابعة الغياب</h2><p>إحصائيات ورسوم متحركة تتحدث مباشرة من سجلات الغياب.</p></div></div>
+      <section class="card dashboard-filter no-print">
+        <div class="dashboard-filter"><div><label>الشهر</label><select id="dashMonth"></select></div><div><label>السنة</label><select id="dashYear"></select></div><button class="primary" onclick="refreshDashboard()">تحديث الإحصائية</button></div>
+      </section>
+      <section class="stats">
+        <div class="stat"><div class="stat-top"><span>غياب اليوم</span><div class="metric-icon"><i class="bi bi-calendar-day"></i></div></div><strong id="sToday">0</strong><div class="metric-line"></div></div>
+        <div class="stat"><div class="stat-top"><span>أيام الغياب هذا الشهر</span><div class="metric-icon"><i class="bi bi-calendar3"></i></div></div><strong id="sMonthDays">0</strong><div class="metric-line"></div></div>
+        <div class="stat"><div class="stat-top"><span>بعذر</span><div class="metric-icon"><i class="bi bi-check2-circle"></i></div></div><strong id="sExcused">0</strong><div class="metric-line"></div></div>
+        <div class="stat"><div class="stat-top"><span>بدون عذر</span><div class="metric-icon"><i class="bi bi-exclamation-circle"></i></div></div><strong id="sUnexcused">0</strong><div class="metric-line"></div></div>
+        <div class="stat"><div class="stat-top"><span>المساءلات المفتوحة</span><div class="metric-icon"><i class="bi bi-file-text"></i></div></div><strong id="sOpenInquiries">0</strong><div class="metric-line"></div></div>
+        <div class="stat nonabsent"><div class="stat-top"><span>لم يغبن هذا الشهر</span><div class="metric-icon"><i class="bi bi-stars"></i></div></div><strong id="sNonAbsent">0</strong><div class="metric-line"></div></div>
+      </section>
+      <section class="card nonabsent"><div class="row"><div><h3 style="margin:0">الموظفات غير الغائبات في الشهر</h3><p class="muted" style="margin:4px 0 0">تظهر الأسماء تلقائيًا من قائمة الموظفات النشطات.</p></div><button class="secondary small no-print" onclick="toggleNonAbsent()">عرض/إخفاء الأسماء</button></div><div id="nonAbsentNames" class="list-mini" style="margin-top:12px"></div></section>
+      <section class="charts">
+        <div class="card chart-card"><h3>اتجاه الغياب خلال السنة</h3><p>إجمالي أيام الغياب لكل شهر.</p><div class="chart-wrap"><canvas id="yearTrendChart"></canvas></div></div>
+        <div class="card chart-card"><h3>حالة الغياب في الشهر</h3><p>بعذر، بدون عذر، وتحت المراجعة.</p><div class="chart-wrap"><canvas id="statusChart"></canvas></div></div>
+        <div class="card chart-card"><h3>أعلى الموظفات غيابًا</h3><p>بحسب عدد أيام الغياب في الشهر المحدد.</p><div class="chart-wrap"><canvas id="topChart"></canvas></div></div>
+        <div class="card chart-card"><h3>مقارنة آخر 6 أشهر</h3><p>مقارنة ديناميكية لاتجاه الغياب.</p><div class="chart-wrap"><canvas id="compareChart"></canvas></div></div>
+      </section>
+    </section>
+
+    <section id="page-employees" class="page hidden">
+      <div class="page-heading"><div class="heading-icon"><i class="bi bi-people"></i></div><div><h2>الموظفات</h2><p>القائمة الأساسية التي يعتمد عليها احتساب الغائبات وغير الغائبات.</p></div></div>
+      <section class="card">
+        <div class="grid2"><div><label>اسم الموظفة *</label><input id="empName" placeholder="الاسم الكامل"></div><div><label>المسمى الوظيفي</label><input id="empJob" placeholder="مثال: إدارية"></div><div><label>القسم / المجال</label><input id="empDept" placeholder="القسم أو المجال"></div><div><label>الحالة الوظيفية</label><select id="empStatus"><option value="active">على رأس العمل</option><option value="long_leave">إجازة طويلة</option><option value="transferred">منقولة</option><option value="inactive">غير نشطة</option></select></div></div>
+        <label>ملاحظات</label><textarea id="empNotes"></textarea><button class="primary full" onclick="saveEmployee()">إضافة الموظفة</button><div id="empMsg" class="message"></div>
+      </section>
+      <section class="card search-card"><i class="bi bi-search"></i><input id="empSearch" placeholder="بحث باسم الموظفة أو المسمى" oninput="renderEmployees()"></section><div id="employeesList"></div>
+    </section>
+
+    <section id="page-daily" class="page hidden">
+      <div class="page-heading"><div class="heading-icon"><i class="bi bi-calendar-check"></i></div><div><h2>الغياب اليومي</h2><p>سجلي الغياب مرة واحدة فقط، وتنعكس البيانات تلقائيًا على جميع الإحصائيات.</p></div></div>
+      <section class="card">
+        <div class="grid2"><div><label>الموظفة *</label><select id="absEmployee"></select></div><div><label>تاريخ الغياب *</label><input id="absDate" type="date"></div><div><label>عدد الأيام</label><input id="absDays" type="number" min="1" value="1"></div><div><label>حالة العذر</label><select id="absStatus"><option value="excused">بعذر</option><option value="unexcused">بدون عذر</option><option value="review">تحت المراجعة</option></select></div></div>
+        <label>سبب الغياب</label><input id="absReason" placeholder="اختياري"><label>ملاحظات</label><textarea id="absNotes"></textarea><label>العذر / الإثبات PDF</label><input id="absFile" type="file" accept="application/pdf"><button class="primary full" onclick="saveAbsence()">حفظ الغياب</button><div id="absMsg" class="message"></div>
+      </section>
+      <section class="card toolbar"><input id="absSearch" placeholder="بحث باسم الموظفة" oninput="renderAbsences()"><input id="absFilterDate" type="date" onchange="renderAbsences()"><button class="secondary" onclick="clearAbsFilters()">إلغاء الفلترة</button></section><div id="absencesList"></div>
+    </section>
+
+    <section id="page-monthly" class="page hidden">
+      <div class="page-heading"><div class="heading-icon"><i class="bi bi-bar-chart"></i></div><div><h2>الإحصائية الشهرية</h2><p>تُحتسب آليًا من السجل اليومي، بما في ذلك الموظفات اللاتي لم يغبن.</p></div></div>
+      <section class="card"><div class="dashboard-filter"><div><label>الشهر</label><select id="monthMonth"></select></div><div><label>السنة</label><select id="monthYear"></select></div><button class="primary" onclick="renderMonthlyTable()">عرض</button><button class="secondary no-print" onclick="window.print()">طباعة / حفظ PDF</button></div></section>
+      <section class="card"><div class="row"><div><h3 style="margin:0">ملخص الشهر</h3><div id="monthSummary" class="muted"></div></div></div><div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>الموظفة</th><th>المسمى</th><th>إجمالي الأيام</th><th>بعذر</th><th>بدون عذر</th><th>تحت المراجعة</th><th>الحالة</th></tr></thead><tbody id="monthlyBody"></tbody></table></div></section>
+    </section>
+
+    <section id="page-correspondence" class="page hidden">
+      <div class="page-heading"><div class="heading-icon"><i class="bi bi-arrow-left-right"></i></div><div><h2>صادر ووارد الغياب</h2><p>حفظ ومتابعة المراسلات المرتبطة بالغياب.</p></div></div>
+      <section class="card">
+        <div class="grid2"><div><label>النوع</label><select id="corrDirection"><option value="incoming">وارد</option><option value="outgoing">صادر</option></select></div><div><label>رقم المعاملة</label><input id="corrRef"></div><div><label>التاريخ *</label><input id="corrDate" type="date"></div><div><label>الجهة</label><input id="corrOrg"></div><div><label>الموظفة المرتبطة</label><select id="corrEmployee"><option value="">بدون تحديد</option></select></div><div><label>الموضوع *</label><input id="corrSubject"></div></div>
+        <label>ملاحظات</label><textarea id="corrNotes"></textarea><label>المرفق PDF</label><input id="corrFile" type="file" accept="application/pdf"><button class="primary full" onclick="saveCorrespondence()">حفظ المراسلة</button><div id="corrMsg" class="message"></div>
+      </section>
+      <section class="card search-card"><i class="bi bi-search"></i><input id="corrSearch" placeholder="بحث بالموضوع أو الرقم أو الجهة" oninput="renderCorrespondence()"></section><div id="correspondenceList"></div>
+    </section>
+
+    <section id="page-inquiries" class="page hidden">
+      <div class="page-heading"><div class="heading-icon"><i class="bi bi-file-earmark-text"></i></div><div><h2>مساءلات الغياب</h2><p>توثيق المساءلة، رد الموظفة، والإجراء المتخذ.</p></div></div>
+      <section class="card">
+        <div class="grid2"><div><label>الموظفة *</label><select id="inqEmployee"></select></div><div><label>تاريخ الغياب</label><input id="inqAbsDate" type="date"></div><div><label>تاريخ المساءلة *</label><input id="inqDate" type="date"></div><div><label>الحالة</label><select id="inqStatus"><option value="open">جديدة</option><option value="replied">تم الرد</option><option value="closed">مغلقة</option></select></div></div>
+        <label>سبب المساءلة</label><textarea id="inqReason"></textarea><label>رد الموظفة</label><textarea id="inqResponse"></textarea><label>الإجراء المتخذ</label><textarea id="inqAction"></textarea><label>ملاحظات</label><textarea id="inqNotes"></textarea><label>نموذج المساءلة PDF</label><input id="inqFile" type="file" accept="application/pdf"><button class="primary full" onclick="saveInquiry()">حفظ المساءلة</button><div id="inqMsg" class="message"></div>
+      </section>
+      <section class="card search-card"><i class="bi bi-search"></i><input id="inqSearch" placeholder="بحث باسم الموظفة أو الحالة" oninput="renderInquiries()"></section><div id="inquiriesList"></div>
+    </section>
+
+    <section id="page-reports" class="page hidden">
+      <div class="page-heading"><div class="heading-icon"><i class="bi bi-graph-up"></i></div><div><h2>التقارير</h2><p>تقارير فورية من البيانات الفعلية، دون إدخال إضافي.</p></div></div>
+      <section class="card"><div class="grid2"><button class="primary" onclick="openPage('monthly')"><i class="bi bi-calendar3"></i> التقرير الشهري</button><button class="secondary" onclick="showUnexcusedReport()"><i class="bi bi-exclamation-circle"></i> الغياب بدون عذر</button><button class="secondary" onclick="showInquiryReport()"><i class="bi bi-file-text"></i> تقرير المساءلات</button><button class="secondary" onclick="showEmployeeReport()"><i class="bi bi-person-lines-fill"></i> تقرير حسب الموظفة</button></div></section>
+      <section id="reportOutput"></section>
+    </section>
+
+    <section id="page-archive" class="page hidden">
+      <div class="page-heading"><div class="heading-icon"><i class="bi bi-archive"></i></div><div><h2>الأرشيف</h2><p>بحث موحد في الغياب والمراسلات والمساءلات السابقة.</p></div></div>
+      <section class="card toolbar"><input id="archiveSearch" placeholder="بحث في الأرشيف" oninput="renderArchive()"><select id="archiveType" onchange="renderArchive()"><option value="all">الكل</option><option value="absence">الغياب</option><option value="correspondence">المراسلات</option><option value="inquiry">المساءلات</option></select></section><div id="archiveList"></div>
+    </section>
+  </main>
+  <footer class="footer"><strong>فكرة وتصميم وتطوير: فاطمة الشمري</strong><br>سكرتيرة مهتمة بالتقنية وتطوير العمل الإداري</footer>
+</div>
+<script>
+const SUPABASE_URL='https://alqhjzfvjgyhlitwdzxl.supabase.co';
+const SUPABASE_KEY='sb_publishable_Dtv-dGYzmK9I2ppxuqH4dQ_qgFDZtcA';
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let currentUser=null, employees=[], absences=[], correspondence=[], inquiries=[];
+let charts={};
+const monthNames=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+const qs=id=>document.getElementById(id);
+const escapeHtml=s=>(s??'').toString().replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const fmtDate=d=>d?new Date(d+'T00:00:00').toLocaleDateString('ar-SA'):'';
+const todayISO=()=>new Date().toISOString().slice(0,10);
+function statusLabel(s){return s==='excused'?'بعذر':s==='unexcused'?'بدون عذر':'تحت المراجعة'}
+function employmentLabel(s){return s==='active'?'على رأس العمل':s==='long_leave'?'إجازة طويلة':s==='transferred'?'منقولة':'غير نشطة'}
+function inquiryLabel(s){return s==='open'?'جديدة':s==='replied'?'تم الرد':'مغلقة'}
+function employeeName(id){return employees.find(e=>String(e.id)===String(id))?.name||'—'}
+function setMsg(id,msg,ok=true){const el=qs(id);el.textContent=msg;el.style.color=ok?'#0f766e':'#c2413b';setTimeout(()=>{el.textContent=''},3500)}
+function animateNumber(id,val){const el=qs(id),start=Number(el.textContent)||0,duration=500,t0=performance.now();function tick(t){let p=Math.min((t-t0)/duration,1);el.textContent=Math.round(start+(val-start)*p);if(p<1)requestAnimationFrame(tick)}requestAnimationFrame(tick)}
+
+async function login(){const email=qs('email').value.trim(),password=qs('password').value;const {data,error}=await db.auth.signInWithPassword({email,password});if(error)return setMsg('loginMsg',error.message,false);currentUser=data.user;await enterApp()}
+async function logout(){await db.auth.signOut();location.reload()}
+async function enterApp(){qs('loginView').classList.add('hidden');qs('app').classList.remove('hidden');await loadAll();initDateInputs();refreshDashboard()}
+async function checkSession(){const {data}=await db.auth.getSession();if(data.session){currentUser=data.session.user;await enterApp()}}
+function initDateInputs(){['absDate','corrDate','inqDate','inqAbsDate'].forEach(id=>{if(qs(id)&&!qs(id).value)qs(id).value=todayISO()});fillMonthYear('dashMonth','dashYear');fillMonthYear('monthMonth','monthYear')}
+function fillMonthYear(mid,yid){const m=qs(mid),y=qs(yid),now=new Date();m.innerHTML=monthNames.map((n,i)=>`<option value="${i+1}" ${i===now.getMonth()?'selected':''}>${n}</option>`).join('');let years=[];for(let yr=now.getFullYear()-3;yr<=now.getFullYear()+1;yr++)years.push(yr);y.innerHTML=years.map(yr=>`<option ${yr===now.getFullYear()?'selected':''}>${yr}</option>`).join('')}
+async function loadAll(){const [e,a,c,i]=await Promise.all([db.from('staff_employees').select('*').order('name'),db.from('staff_absences').select('*').order('absence_date',{ascending:false}),db.from('staff_absence_correspondence').select('*').order('correspondence_date',{ascending:false}),db.from('staff_absence_inquiries').select('*').order('inquiry_date',{ascending:false})]);employees=e.data||[];absences=a.data||[];correspondence=c.data||[];inquiries=i.data||[];populateEmployeeSelects();renderEmployees();renderAbsences();renderCorrespondence();renderInquiries();renderArchive()}
+function populateEmployeeSelects(){const active=employees.filter(e=>e.employment_status==='active');const opts=active.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('');['absEmployee','inqEmployee'].forEach(id=>{if(qs(id))qs(id).innerHTML=opts||'<option value="">أضيفي الموظفات أولًا</option>'});qs('corrEmployee').innerHTML='<option value="">بدون تحديد</option>'+employees.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('')}
+
+// navigation
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.page)));
+function openPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));qs('page-'+name).classList.remove('hidden');document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.page===name));window.scrollTo({top:0,behavior:'smooth'});if(name==='dashboard')refreshDashboard();if(name==='monthly')renderMonthlyTable();if(name==='archive')renderArchive()}
+
+// upload helpers
+async function uploadPDF(file,prefix){if(!file)return {path:null,name:null};if(file.type!=='application/pdf')throw new Error('يرجى اختيار ملف PDF فقط');const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');const path=`${currentUser.id}/${prefix}/${Date.now()}-${safe}`;const {error}=await db.storage.from('absence-documents').upload(path,file,{contentType:'application/pdf'});if(error)throw error;return {path,name:file.name}}
+async function openPDF(path){if(!path)return;const {data,error}=await db.storage.from('absence-documents').createSignedUrl(path,120);if(error)return alert(error.message);window.open(data.signedUrl,'_blank')}
+async function removePDF(path){if(path)await db.storage.from('absence-documents').remove([path])}
+
+// employees
+async function saveEmployee(){const name=qs('empName').value.trim();if(!name)return setMsg('empMsg','اكتبي اسم الموظفة',false);const payload={name,job_title:qs('empJob').value.trim()||null,department:qs('empDept').value.trim()||null,employment_status:qs('empStatus').value,notes:qs('empNotes').value.trim()||null};const {error}=await db.from('staff_employees').insert(payload);if(error)return setMsg('empMsg',error.message,false);['empName','empJob','empDept','empNotes'].forEach(id=>qs(id).value='');setMsg('empMsg','تمت إضافة الموظفة');await loadAll();refreshDashboard()}
+function renderEmployees(){const q=(qs('empSearch')?.value||'').trim().toLowerCase();const rows=employees.filter(e=>(e.name+' '+(e.job_title||'')+' '+(e.department||'')).toLowerCase().includes(q));qs('employeesList').innerHTML=rows.length?rows.map(e=>`<div class="card item"><div class="row"><div><h3>${escapeHtml(e.name)}</h3><div class="meta">${escapeHtml(e.job_title||'بدون مسمى')} • ${escapeHtml(e.department||'بدون قسم')}<br><span class="badge">${employmentLabel(e.employment_status)}</span>${e.notes?'<br>'+escapeHtml(e.notes):''}</div></div><div class="actions"><button class="danger small" onclick="deleteEmployee(${e.id})">حذف</button></div></div></div>`).join(''):'<div class="card empty">لا توجد موظفات.</div>'}
+async function deleteEmployee(id){if(!confirm('حذف الموظفة سيحذف سجلات غيابها المرتبطة. هل أنتِ متأكدة؟'))return;const {error}=await db.from('staff_employees').delete().eq('id',id);if(error)return alert(error.message);await loadAll();refreshDashboard()}
+
+// absences
+async function saveAbsence(){const employee_id=Number(qs('absEmployee').value),absence_date=qs('absDate').value;if(!employee_id||!absence_date)return setMsg('absMsg','اختاري الموظفة والتاريخ',false);try{const up=await uploadPDF(qs('absFile').files[0],'absences');const payload={employee_id,absence_date,days:Number(qs('absDays').value)||1,excuse_status:qs('absStatus').value,reason:qs('absReason').value.trim()||null,notes:qs('absNotes').value.trim()||null,attachment_path:up.path,attachment_name:up.name};const {error}=await db.from('staff_absences').insert(payload);if(error){await removePDF(up.path);throw error}qs('absReason').value='';qs('absNotes').value='';qs('absFile').value='';qs('absDays').value=1;setMsg('absMsg','تم حفظ الغياب وتحديث الإحصائيات');await loadAll();refreshDashboard()}catch(e){setMsg('absMsg',e.message,false)}}
+function clearAbsFilters(){qs('absSearch').value='';qs('absFilterDate').value='';renderAbsences()}
+function renderAbsences(){const q=(qs('absSearch')?.value||'').trim().toLowerCase(),date=qs('absFilterDate')?.value||'';let rows=absences.filter(a=>employeeName(a.employee_id).toLowerCase().includes(q)&&(!date||a.absence_date===date));qs('absencesList').innerHTML=rows.length?rows.map(a=>`<div class="card item"><h3>${escapeHtml(employeeName(a.employee_id))}</h3><div class="meta">التاريخ: ${fmtDate(a.absence_date)} • عدد الأيام: ${a.days}<br><span class="badge ${a.excuse_status==='unexcused'?'danger':a.excuse_status==='review'?'warn':''}">${statusLabel(a.excuse_status)}</span>${a.reason?'<br>السبب: '+escapeHtml(a.reason):''}${a.notes?'<br>ملاحظات: '+escapeHtml(a.notes):''}</div><div class="actions">${a.attachment_path?`<button class="secondary small" onclick="openPDF('${a.attachment_path}')">فتح PDF</button>`:''}<button class="danger small" onclick="deleteAbsence(${a.id},'${a.attachment_path||''}')">حذف</button></div></div>`).join(''):'<div class="card empty">لا توجد سجلات غياب مطابقة.</div>'}
+async function deleteAbsence(id,path){if(!confirm('حذف سجل الغياب؟'))return;const {error}=await db.from('staff_absences').delete().eq('id',id);if(error)return alert(error.message);await removePDF(path);await loadAll();refreshDashboard()}
+
+// correspondence
+async function saveCorrespondence(){if(!qs('corrDate').value||!qs('corrSubject').value.trim())return setMsg('corrMsg','التاريخ والموضوع مطلوبان',false);try{const up=await uploadPDF(qs('corrFile').files[0],'correspondence');const payload={direction:qs('corrDirection').value,reference_number:qs('corrRef').value.trim()||null,correspondence_date:qs('corrDate').value,organization:qs('corrOrg').value.trim()||null,subject:qs('corrSubject').value.trim(),employee_id:qs('corrEmployee').value?Number(qs('corrEmployee').value):null,notes:qs('corrNotes').value.trim()||null,attachment_path:up.path,attachment_name:up.name};const {error}=await db.from('staff_absence_correspondence').insert(payload);if(error){await removePDF(up.path);throw error}['corrRef','corrOrg','corrSubject','corrNotes'].forEach(id=>qs(id).value='');qs('corrFile').value='';setMsg('corrMsg','تم حفظ المراسلة');await loadAll()}catch(e){setMsg('corrMsg',e.message,false)}}
+function renderCorrespondence(){const q=(qs('corrSearch')?.value||'').trim().toLowerCase();const rows=correspondence.filter(c=>((c.subject||'')+' '+(c.reference_number||'')+' '+(c.organization||'')+' '+employeeName(c.employee_id)).toLowerCase().includes(q));qs('correspondenceList').innerHTML=rows.length?rows.map(c=>`<div class="card item"><h3>${escapeHtml(c.subject)}</h3><div class="meta"><span class="badge">${c.direction==='incoming'?'وارد':'صادر'}</span> ${c.reference_number?'رقم: '+escapeHtml(c.reference_number)+' • ':''}${fmtDate(c.correspondence_date)}${c.organization?'<br>الجهة: '+escapeHtml(c.organization):''}${c.employee_id?'<br>الموظفة: '+escapeHtml(employeeName(c.employee_id)):''}${c.notes?'<br>'+escapeHtml(c.notes):''}</div><div class="actions">${c.attachment_path?`<button class="secondary small" onclick="openPDF('${c.attachment_path}')">فتح PDF</button>`:''}<button class="danger small" onclick="deleteCorrespondence(${c.id},'${c.attachment_path||''}')">حذف</button></div></div>`).join(''):'<div class="card empty">لا توجد مراسلات.</div>'}
+async function deleteCorrespondence(id,path){if(!confirm('حذف المراسلة؟'))return;const {error}=await db.from('staff_absence_correspondence').delete().eq('id',id);if(error)return alert(error.message);await removePDF(path);await loadAll()}
+
+// inquiries
+async function saveInquiry(){const employee_id=Number(qs('inqEmployee').value),inquiry_date=qs('inqDate').value;if(!employee_id||!inquiry_date)return setMsg('inqMsg','الموظفة وتاريخ المساءلة مطلوبان',false);try{const up=await uploadPDF(qs('inqFile').files[0],'inquiries');const payload={employee_id,absence_date:qs('inqAbsDate').value||null,inquiry_date,reason:qs('inqReason').value.trim()||null,employee_response:qs('inqResponse').value.trim()||null,action_taken:qs('inqAction').value.trim()||null,status:qs('inqStatus').value,notes:qs('inqNotes').value.trim()||null,attachment_path:up.path,attachment_name:up.name};const {error}=await db.from('staff_absence_inquiries').insert(payload);if(error){await removePDF(up.path);throw error}['inqReason','inqResponse','inqAction','inqNotes'].forEach(id=>qs(id).value='');qs('inqFile').value='';setMsg('inqMsg','تم حفظ المساءلة');await loadAll();refreshDashboard()}catch(e){setMsg('inqMsg',e.message,false)}}
+function renderInquiries(){const q=(qs('inqSearch')?.value||'').trim().toLowerCase();const rows=inquiries.filter(i=>(employeeName(i.employee_id)+' '+inquiryLabel(i.status)).toLowerCase().includes(q));qs('inquiriesList').innerHTML=rows.length?rows.map(i=>`<div class="card item"><h3>${escapeHtml(employeeName(i.employee_id))}</h3><div class="meta">تاريخ المساءلة: ${fmtDate(i.inquiry_date)}${i.absence_date?' • تاريخ الغياب: '+fmtDate(i.absence_date):''}<br><span class="badge ${i.status==='open'?'warn':''}">${inquiryLabel(i.status)}</span>${i.reason?'<br>السبب: '+escapeHtml(i.reason):''}${i.employee_response?'<br>رد الموظفة: '+escapeHtml(i.employee_response):''}${i.action_taken?'<br>الإجراء: '+escapeHtml(i.action_taken):''}</div><div class="actions">${i.attachment_path?`<button class="secondary small" onclick="openPDF('${i.attachment_path}')">فتح PDF</button>`:''}<button class="danger small" onclick="deleteInquiry(${i.id},'${i.attachment_path||''}')">حذف</button></div></div>`).join(''):'<div class="card empty">لا توجد مساءلات.</div>'}
+async function deleteInquiry(id,path){if(!confirm('حذف المساءلة؟'))return;const {error}=await db.from('staff_absence_inquiries').delete().eq('id',id);if(error)return alert(error.message);await removePDF(path);await loadAll();refreshDashboard()}
+
+// analytics
+function monthRange(year,month){const start=`${year}-${String(month).padStart(2,'0')}-01`,last=new Date(year,month,0).getDate(),end=`${year}-${String(month).padStart(2,'0')}-${String(last).padStart(2,'0')}`;return {start,end}}
+function monthAbsences(year,month){const {start,end}=monthRange(year,month);return absences.filter(a=>a.absence_date>=start&&a.absence_date<=end)}
+function activeEmployees(){return employees.filter(e=>e.employment_status==='active')}
+function nonAbsentEmployees(year,month){const ids=new Set(monthAbsences(year,month).map(a=>String(a.employee_id)));return activeEmployees().filter(e=>!ids.has(String(e.id)))}
+function toggleNonAbsent(){qs('nonAbsentNames').classList.toggle('hidden')}
+async function refreshDashboard(){const year=Number(qs('dashYear').value||new Date().getFullYear()),month=Number(qs('dashMonth').value||new Date().getMonth()+1),mrows=monthAbsences(year,month),today=todayISO();animateNumber('sToday',absences.filter(a=>a.absence_date===today).length);animateNumber('sMonthDays',mrows.reduce((s,a)=>s+a.days,0));animateNumber('sExcused',mrows.filter(a=>a.excuse_status==='excused').reduce((s,a)=>s+a.days,0));animateNumber('sUnexcused',mrows.filter(a=>a.excuse_status==='unexcused').reduce((s,a)=>s+a.days,0));animateNumber('sOpenInquiries',inquiries.filter(i=>i.status==='open').length);const non=nonAbsentEmployees(year,month);animateNumber('sNonAbsent',non.length);qs('nonAbsentNames').innerHTML=non.length?non.map(e=>`<span class="pill">${escapeHtml(e.name)}</span>`).join(''):'<span class="muted">لا توجد أسماء ضمن هذه الفئة.</span>';renderCharts(year,month)}
+function destroyChart(k){if(charts[k]){charts[k].destroy();delete charts[k]}}
+function renderCharts(year,month){
+  const monthTotals=Array.from({length:12},(_,i)=>monthAbsences(year,i+1).reduce((s,a)=>s+a.days,0));
+  destroyChart('trend');charts.trend=new Chart(qs('yearTrendChart'),{type:'line',data:{labels:monthNames,datasets:[{label:'أيام الغياب',data:monthTotals,tension:.35,fill:true,borderWidth:3,backgroundColor:'rgba(15,118,110,.10)',borderColor:'#0f766e',pointBackgroundColor:'#0f766e'}]},options:chartOptions()});
+  const m=monthAbsences(year,month);const status=[['بعذر','excused'],['بدون عذر','unexcused'],['تحت المراجعة','review']].map(([n,s])=>m.filter(a=>a.excuse_status===s).reduce((x,a)=>x+a.days,0));
+  destroyChart('status');charts.status=new Chart(qs('statusChart'),{type:'doughnut',data:{labels:['بعذر','بدون عذر','تحت المراجعة'],datasets:[{data:status,backgroundColor:['#0f766e','#e7524a','#d89b22'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:900,easing:'easeOutQuart'},plugins:{legend:{position:'bottom'}}}});
+  const map={};m.forEach(a=>map[a.employee_id]=(map[a.employee_id]||0)+a.days);const top=Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  destroyChart('top');charts.top=new Chart(qs('topChart'),{type:'bar',data:{labels:top.map(([id])=>employeeName(id)),datasets:[{label:'أيام الغياب',data:top.map(x=>x[1]),backgroundColor:'#159b8e',borderRadius:8}]},options:{...chartOptions(),indexAxis:'y'}});
+  const points=[];for(let k=5;k>=0;k--){const d=new Date(year,month-1-k,1);points.push({label:monthNames[d.getMonth()]+' '+d.getFullYear(),value:monthAbsences(d.getFullYear(),d.getMonth()+1).reduce((s,a)=>s+a.days,0)})}
+  destroyChart('compare');charts.compare=new Chart(qs('compareChart'),{type:'line',data:{labels:points.map(p=>p.label),datasets:[{label:'أيام الغياب',data:points.map(p=>p.value),tension:.35,borderColor:'#0b6a73',backgroundColor:'rgba(11,106,115,.08)',fill:true,borderWidth:3}]},options:chartOptions()});
+}
+function chartOptions(){return{responsive:true,maintainAspectRatio:false,animation:{duration:900,easing:'easeOutQuart'},scales:{y:{beginAtZero:true,ticks:{precision:0},grid:{color:'rgba(100,116,139,.10)'}},x:{grid:{display:false}}},plugins:{legend:{display:false},tooltip:{displayColors:false}}}}
+function renderMonthlyTable(){const year=Number(qs('monthYear').value||new Date().getFullYear()),month=Number(qs('monthMonth').value||new Date().getMonth()+1),rows=monthAbsences(year,month),active=activeEmployees(),agg={};rows.forEach(a=>{agg[a.employee_id]??={total:0,excused:0,unexcused:0,review:0};agg[a.employee_id].total+=a.days;agg[a.employee_id][a.excuse_status]+=a.days});const body=active.map(e=>{const x=agg[e.id]||{total:0,excused:0,unexcused:0,review:0};return`<tr class="${x.total===0?'zero-row':''}"><td>${escapeHtml(e.name)}</td><td>${escapeHtml(e.job_title||'—')}</td><td>${x.total}</td><td>${x.excused}</td><td>${x.unexcused}</td><td>${x.review}</td><td>${x.total===0?'<span class="badge">لم تغب</span>':'<span class="badge warn">لديها غياب</span>'}</td></tr>`}).join('');qs('monthlyBody').innerHTML=body||'<tr><td colspan="7">لا توجد موظفات نشطات.</td></tr>';qs('monthSummary').textContent=`${monthNames[month-1]} ${year} — الموظفات: ${active.length} — غير الغائبات: ${active.filter(e=>!agg[e.id]).length} — إجمالي أيام الغياب: ${rows.reduce((s,a)=>s+a.days,0)}`}
+
+// reports
+function reportCard(title,html){qs('reportOutput').innerHTML=`<section class="card"><div class="row"><h3 style="margin:0">${title}</h3><button class="secondary small no-print" onclick="window.print()">طباعة / PDF</button></div>${html}</section>`}
+function showUnexcusedReport(){const rows=absences.filter(a=>a.excuse_status==='unexcused');reportCard('تقرير الغياب بدون عذر',rows.length?rows.map(a=>`<div class="item card"><strong>${escapeHtml(employeeName(a.employee_id))}</strong><div class="meta">${fmtDate(a.absence_date)} • ${a.days} يوم</div></div>`).join(''):'<div class="empty">لا توجد سجلات بدون عذر.</div>')}
+function showInquiryReport(){reportCard('تقرير المساءلات',inquiries.length?inquiries.map(i=>`<div class="item card"><strong>${escapeHtml(employeeName(i.employee_id))}</strong><div class="meta">${fmtDate(i.inquiry_date)} • ${inquiryLabel(i.status)}</div></div>`).join(''):'<div class="empty">لا توجد مساءلات.</div>')}
+function showEmployeeReport(){if(!employees.length)return reportCard('تقرير حسب الموظفة','<div class="empty">أضيفي الموظفات أولًا.</div>');const opts=employees.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('');reportCard('تقرير حسب الموظفة',`<div class="no-print"><select id="reportEmployee">${opts}</select><button class="primary full" onclick="renderEmployeeReport()">عرض التقرير</button></div><div id="employeeReportBody"></div>`)}
+function renderEmployeeReport(){const id=Number(qs('reportEmployee').value),e=employees.find(x=>x.id===id),rows=absences.filter(a=>a.employee_id===id),inq=inquiries.filter(i=>i.employee_id===id);qs('employeeReportBody').innerHTML=`<h3>${escapeHtml(e.name)}</h3><div class="meta">${escapeHtml(e.job_title||'')} ${e.department?'• '+escapeHtml(e.department):''}</div><div class="stats" style="margin-top:12px"><div class="stat"><span>إجمالي سجلات الغياب</span><strong>${rows.length}</strong></div><div class="stat"><span>إجمالي الأيام</span><strong>${rows.reduce((s,a)=>s+a.days,0)}</strong></div><div class="stat"><span>المساءلات</span><strong>${inq.length}</strong></div></div>`}
+
+// archive
+function renderArchive(){const q=(qs('archiveSearch')?.value||'').trim().toLowerCase(),type=qs('archiveType')?.value||'all';let items=[];if(type==='all'||type==='absence')items.push(...absences.map(a=>({type:'غياب',date:a.absence_date,title:employeeName(a.employee_id),desc:`${a.days} يوم • ${statusLabel(a.excuse_status)}`})));if(type==='all'||type==='correspondence')items.push(...correspondence.map(c=>({type:'مراسلة',date:c.correspondence_date,title:c.subject,desc:`${c.direction==='incoming'?'وارد':'صادر'} ${c.reference_number||''}`})));if(type==='all'||type==='inquiry')items.push(...inquiries.map(i=>({type:'مساءلة',date:i.inquiry_date,title:employeeName(i.employee_id),desc:inquiryLabel(i.status)})));items=items.filter(x=>(x.title+' '+x.desc+' '+x.type).toLowerCase().includes(q)).sort((a,b)=>b.date.localeCompare(a.date));qs('archiveList').innerHTML=items.length?items.map(x=>`<div class="card item"><h3>${escapeHtml(x.title)}</h3><div class="meta"><span class="badge">${x.type}</span> ${fmtDate(x.date)}<br>${escapeHtml(x.desc)}</div></div>`).join(''):'<div class="card empty">لا توجد نتائج في الأرشيف.</div>'}
+
+checkSession();
+</script>
+</body>
+</html>
